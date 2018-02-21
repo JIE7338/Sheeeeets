@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux'
 
 import {
-            SESSION,
             SESSION_REQUEST_LOGIN,
             SESSION_RECEIVE_LOGIN,
             SESSION_LOGOUT,
@@ -29,6 +28,10 @@ import {
             RECEIVE_CREATE_NEW_SHEET,
             CHANGE_NAME_NEW_SHEET,
             RECEIVE_GET_SHEETS,
+            SET_NAME_OF_SHEET_BEING_EDITED,
+            SET_NEW_SHEET_NAME,
+            REQUEST_CHANGE_SHEET_NAME,
+            RECEIVE_CHANGE_SHEET_NAME,
                                     } from './actions'
 
 
@@ -45,8 +48,6 @@ const defaultSessionState = {
 
 function session(state = defaultSessionState, action) {
     switch (action.type) {
-        case SESSION:
-            return Object.assign({}, state, {id: action.id});
         case SESSION_REQUEST_LOGIN:
             return Object.assign({}, state, {
                 isFetching: true,
@@ -167,6 +168,7 @@ const defaultEmailState = {
     email: '',
 }
 
+
 function email(state = defaultEmailState, action) {
     switch (action.type) {
         case UPDATE_EMAIL:
@@ -221,7 +223,8 @@ function register(state = defaultRegisterState, action) {
 }
 // ==========================================
 const defaultModalState = {
-
+    show: false,
+    message: '',
 }
 function messageModal(state = defaultModalState, action) {
     switch (action.type) {
@@ -233,6 +236,8 @@ function messageModal(state = defaultModalState, action) {
 }
 // ==========================================
 const defaultNewSheetState = {
+    isFetching: false,
+    error: null,
     name: '',
 }
 function newSheet(state = defaultNewSheetState, action) {
@@ -255,6 +260,14 @@ function sheets(state = defaultSheetState, action) {
     switch (action.type) {
         case RECEIVE_GET_SHEETS:
             return Object.assign({}, state, {sheets: action.sheets});
+        case SET_NAME_OF_SHEET_BEING_EDITED:
+            return Object.assign({}, state, {sheetBeingEdited: action.sheetName});
+        case SET_NEW_SHEET_NAME:
+            return Object.assign({}, state, {newSheetName: action.sheetName});
+        case REQUEST_CHANGE_SHEET_NAME:
+            return Object.assign({}, state);
+        case RECEIVE_CHANGE_SHEET_NAME:
+            return Object.assign({}, state);
         default:
             return state
     }

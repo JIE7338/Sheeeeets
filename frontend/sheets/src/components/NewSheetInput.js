@@ -7,7 +7,7 @@ const mapStateToProps = (state, ownProps) => {
     return {
         username: state.session.username,
         creationError: state.newSheet.error,
-        sheetName: state.newSheet.sheetName,
+        sheetName: state.newSheet.name,
     }
 }
 

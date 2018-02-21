@@ -30,7 +30,7 @@ const _SheetList = class extends Component {
 
     render() {
         return (
-            <div class="columns is-multiline is-mobile">
+            <div class="columns is-multiline">
                 {this.props.sheets.map((sheet,i) => {
                     return <div className='column is-one-third '>
                         <SheetCard key={i} sheet={sheet}/>
