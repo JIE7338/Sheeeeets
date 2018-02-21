@@ -54,7 +54,7 @@ const _LoginControl = class extends Component {
             : null;
         return (
             <div>
-                <h1 className='title'>Please sign in.</h1>
+                <h1 className='title has-text-centered'>Please sign in.</h1>
                 <form>
                     <div className="field">
                         <label className="label">Username</label>
