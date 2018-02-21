@@ -16,6 +16,20 @@ export const RECEIVE_REGISTER =  'RECEIVE_REGISTER';
 export const SUBMIT_REGISTRATION_INFO =  'SUBMIT_REGISTRATION_INFO';
 
 export const EDIT_MESSAGE_MODAL =  'EDIT_MESSAGE_MODAL';
+export const _ACCOUNT_TOGGLE_PASSWORD = '_ACCOUNT_TOGGLE_PASSWORD';
+export const _ACCOUNT_TOGGLE_EMAIL = '_ACCOUNT_TOGGLE_EMAIL';
+export const ADD_ACCOUNT_INFO_TO_ACCOUNT = 'ADD_ACCOUNT_INFO_TO_ACCOUNT';
+
+export const PASSWORD_SET_VALUES = 'PASSWORD_SET_VALUES';
+export const UPDATE_PASSWORD = 'UPDATE_PASSWORD';
+export const RECEIVE_PASSWORD = 'RECEIVE_PASSWORD';
+export const SUBMIT_PASSWORD = 'SUBMIT_PASSWORD';
+
+export const EMAIL_SET_VALUES = 'EMAIL_SET_VALUES';
+export const UPDATE_EMAIL = 'UPDATE_EMAIL';
+export const RECEIVE_EMAIL = 'RECEIVE_EMAIL';
+export const SUBMIT_EMAIL = 'SUBMIT_EMAIL';
+
 
 export const ADD_ACCOUNT_INFO_TO_SESSION = 'ADD_ACCOUNT_INFO_TO_SESSION';
 
@@ -324,91 +338,6 @@ export function addAccountInfoToSession({username, password, firstName, lastName
         email
     }
 }
-
-export function addAccountInfoToAccount({username, firstName, lastName, email}) {
-    return {
-        type: ADD_ACCOUNT_INFO_TO_ACCOUNT,
-        username,
-        firstName,
-        lastName,
-        email
-    }
-}
-
-export function attemptPassword({username, password}) {
-    return function (dispatch) {
-        dispatch(updatePassword());
-        if(password.length < 1) {
-            const success = false;
-            const error = 'Please finish filling in the form'
-            console.log('not long enough')
-            return dispatch(receivePass(success, error));
-        }
-        return fetch("http://default-environment.c2nuqptw9f.us-east-2.elasticbeanstalk.com/changePassword?username=" +
-            `${username}&newPassword=${password}`, {
-            method: "POST",
-            headers: new Headers({
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-                'Access-Control-Allow-Origin': 'http://localhost:8080',
-            }),
-            body: JSON.stringify({
-                name: username,
-                pass: password
-            }),
-        })
-        .then((response) => response.json(),
-            (error) => console.log('An error occurred.', error))
-        .then((json) => {
-            const success = json.response === 'Success';
-            if (success) {
-                dispatch(togglePassword());
-                dispatch(showMessageModal('Password Update Successful!'));
-                dispatch(setValuesForPassword(''));
-            }
-            const error = (success) ? null : json.response;
-            return dispatch(receivePass(success, error));
-        });
-    }
-}
-
-export function attemptEmail({username, email}) {
-    return function (dispatch) {
-        dispatch(updateEmail());
-        if(email.length < 1) {
-            const success = false;
-            const error = 'Please finish filling in the form'
-            console.log('not long enough')
-            return dispatch(receiveEmail(success, error));
-        }
-        return fetch("http://default-environment.c2nuqptw9f.us-east-2.elasticbeanstalk.com/changePassword?username=" +
-            `${username}&newEmail=${email}`, {
-            method: "POST",
-            headers: new Headers({
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-                'Access-Control-Allow-Origin': 'http://localhost:8080',
-            }),
-            body: JSON.stringify({
-                name: username,
-                email: email
-            }),
-        })
-        .then((response) => response.json(),
-            (error) => console.log('An error occurred.', error))
-        .then((json) => {
-            const success = json.response === 'Success';
-            if (success) {
-                dispatch(toggleEmail());
-                dispatch(showMessageModal('Email Update Successful!'));
-                dispatch(setValuesForEmail(''));
-            }
-            const error = (success) ? null : json.response;
-            return dispatch(receiveEmail(success, error));
-        });
-    }
-}
-
 
 export function addAccountInfoToAccount({username, firstName, lastName, email}) {
     return {
