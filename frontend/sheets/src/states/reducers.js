@@ -203,7 +203,7 @@ const defaultSheetState = {
 function sheets(state = defaultSheetState, action) {
     switch (action.type) {
         case RECEIVE_GET_SHEETS:
-            return Object.assign({}, state, {sheets: action.sheets});
+            return Object.assign({}, state, {sheets: action.sheets, dates: action.dates});
         case SET_NAME_OF_SHEET_BEING_EDITED:
             return Object.assign({}, state, {sheetBeingEdited: action.sheetName});
         case SET_NEW_SHEET_NAME:

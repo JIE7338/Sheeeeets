@@ -14,10 +14,8 @@ export function changeNewSheetName(name) {
     return {type: CHANGE_NAME_NEW_SHEET, name};
 }
 export function createNewSheet(name, username) {
-    console.log(username)
     return function (dispatch) {
         dispatch(submitCreateNewSheet(username));
-        console.log(name)
         return fetch('http://default-environment.c2nuqptw9f.us-east-2.elasticbeanstalk.com/addSheet?username='
             + username + '&name=' + name, {
                 mode: 'cors',
@@ -27,7 +25,6 @@ export function createNewSheet(name, username) {
         .then((response) => response.json(),
             (error) => console.log('An error occurred.', error))
         .then((json) => {
-            console.log(json);
             dispatch(getSheets(username));
             return dispatch(receiveCreateNewSheet(name));
         });
@@ -43,8 +40,8 @@ export const CHANGE_NAME_SHEET = 'CHANGE_NAME_SHEET';
 function submitGetSheets() {
     return {type: SUBMIT_GET_SHEETS};
 }
-function receiveGetSheets(sheets) {
-    return {type: RECEIVE_GET_SHEETS, sheets};
+function receiveGetSheets(sheets, dates) {
+    return {type: RECEIVE_GET_SHEETS, sheets, dates};
 }
 export function getSheets(username) {
     return function (dispatch) {
@@ -58,10 +55,28 @@ export function getSheets(username) {
         .then((response) => response.json(),
             (error) => console.log('An error occurred.', error))
         .then((json) => {
-            return dispatch(receiveGetSheets(json.names));
+            return dispatch(receiveGetSheets(json.names, json.dates));
         });
     }
 }
+export function deleteSheet(username, sheetName) {
+    return function (dispatch) {
+        dispatch(submitGetSheets());
+        return fetch('http://default-environment.c2nuqptw9f.us-east-2.elasticbeanstalk.com/deleteSheet?username='
+                + username + '&title=' + sheetName, {
+                mode: 'cors',
+                method: 'GET',
+        })
+        // !!! Do not use catch !!! Catch would cause error, if error only log it
+        .then((response) => response.json(),
+            (error) => console.log('An error occurred.', error))
+        .then((json) => {
+            return dispatch(getSheets(username));
+        });
+    }
+}
+
+
 
 
 /////// CHANGING SHEET NAMES
@@ -86,23 +101,30 @@ export function setNewSheetName(sheetName) {
 export function requestChangeSheetName() {
     return {type: REQUEST_CHANGE_SHEET_NAME};
 }
-export function receivetChangeSheetName() {
+export function receiveChangeSheetName() {
     return {type: RECEIVE_CHANGE_SHEET_NAME};
 }
-export function changeSheetName(name) {
+export function changeSheetName(username, sheetName, newSheetName) {
     return function (dispatch) {
         dispatch(requestChangeSheetName());
-        return fetch('www.google.com.json')
-        .then((r) => console.log(r))
-        .then((r) => {
-            dispatch(receivetChangeSheetName());
+        return fetch('http://default-environment.c2nuqptw9f.us-east-2.elasticbeanstalk.com/renameSheet?username='
+                + username + '&title='
+                + sheetName + '&newtitle='
+                + newSheetName, {
+                mode: 'cors',
+                method: 'GET',
+        })
+        // !!! Do not use catch !!! Catch would cause error, if error only log it
+        .then((response) => response.json(),
+            (error) => console.log('An error occurred.', error))
+        .then((json) => {
+            console.log(json);
+            dispatch(getSheets(username));
+            dispatch(receiveChangeSheetName());
             dispatch(suggestNewSheetName(null));
         });
     }
 }
-
-
-
 
 ////////////// POP UP MESSAGE MODAL //////////////////////
 export const EDIT_MESSAGE_MODAL =  'EDIT_MESSAGE_MODAL';
@@ -279,7 +301,6 @@ export function attemptRegister({username, password, firstName, lastName, email}
         if(username.length < 1 || password.length < 1 || firstName.length < 1 || lastName.length < 1 || email.length < 1) {
             const success = false;
             const error = 'Please finish filling in the form'
-            console.log('not long enough')
             return dispatch(receiveRegister(success, error));
         }
         return fetch("http://default-environment.c2nuqptw9f.us-east-2.elasticbeanstalk.com/register?username=" +
