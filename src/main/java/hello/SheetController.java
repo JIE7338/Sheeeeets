@@ -4,9 +4,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
@@ -24,14 +22,19 @@ public class SheetController {
      * add new sheet. For now this only takes in username and sheet name and fills in
      * data column with empty string
      * ex: http://default-environment.c2nuqptw9f.us-east-2.elasticbeanstalk.com/addSheet?username=<user>&name=<name>
-     *
+     * returns {"response": "Error: sheet already exists"} if sheet already exists
      */
     @RequestMapping(value = "/addSheet", method = RequestMethod.POST)
     public Response addSheet(@RequestParam(value="username", defaultValue="na") String username,
                           @RequestParam(value="name", defaultValue="na") String name) {
         Connection con = DBConnect.requestConnection();
-        String timeStamp = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+        String timeStamp = Long.toString(System.currentTimeMillis());
         try {
+            ResultSet set = DBConnect.executeRetrieve("SELECT * FROM SheetsDB.Sheets WHERE username = '" + username + "' AND title = '" + name + "';", con);
+            while (set.next()) {
+                con.close();
+                return new Response("Error: sheet already exists");
+            }
             DBConnect.executeUpdate("INSERT INTO SheetsDB.Sheets (username, title, data, createdDate) VALUES " +
                     "('" + username + "','" + name + "','" + "" + "','" + timeStamp + "');", con);
             con.close();
