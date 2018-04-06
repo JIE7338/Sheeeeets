@@ -32,8 +32,26 @@ import {
             SET_NEW_SHEET_NAME,
             REQUEST_CHANGE_SHEET_NAME,
             RECEIVE_CHANGE_SHEET_NAME,
+
+            OPEN_THIS_SHEET,
                                     } from './actions'
 
+//
+
+
+// ==========================================
+const defaultSingleSheetState = {};
+
+function sheetPage(state= defaultSingleSheetState, action) {
+    switch(action.type) {
+        case OPEN_THIS_SHEET:
+            return Object.assign({}, state, {
+                sheetName: action.sheet,
+            });
+        default:
+            return state
+    }
+}
 
 
 
@@ -223,7 +241,7 @@ function sheets(state = defaultSheetState, action) {
 
 
 const todoApp = combineReducers({
-  session, login, register, messageModal, accountManager, newSheet, sheets
+  session, login, register, messageModal, accountManager, newSheet, sheets, sheetPage
 })
 
 export default todoApp

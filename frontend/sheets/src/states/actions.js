@@ -32,6 +32,80 @@ export function createNewSheet(name, username) {
 }
 ///////////////////////////////////////////////////
 
+/////////////// HANDLEING  A SINGLE SHEETS ////////
+export const OPEN_THIS_SHEET = 'OPEN_THIS_SHEET';
+
+export function openSheet(sheet) {
+    return {type: OPEN_THIS_SHEET, sheet};
+}
+//-------------------------
+
+export const SUBMIT_GET_SHEET_JSON = 'SUBMIT_GET_SHEET_JSON';
+export const RECEIVE_GET_SHEET_JSON = 'RECEIVE_GET_SHEET_JSON';
+
+function submitGetSheetJSON(sheet) {
+    return {type: SUBMIT_GET_SHEET_JSON, sheet};
+}
+function receiveGetSheetsJSON(json) {
+    return {type: RECEIVE_GET_SHEET_JSON, json};
+}
+
+export function getSheetJSON(username, sheet) {
+    return function (dispatch) {
+        dispatch(submitGetSheetJSON(sheet));
+        return fetch(`http://default-environment.c2nuqptw9f.us-east-2.elasticbeanstalk.com/getData?username=${username}&title=${sheet}`, {
+                mode: 'cors',
+                method: 'GET',
+        })
+        // !!! Do not use catch !!! Catch would cause error, if error only log it
+        .then((response) => response.json(),
+            (error) => console.log('An error occurred.', error))
+        .then((json) => {
+            console.log(json);
+            return dispatch(receiveGetSheetsJSON(json));
+        });
+    }
+}
+//-------------------------
+
+export const SUBMIT_SAVE_SHEET_JSON = 'SUBMIT_SAVE_SHEET_JSON';
+export const RECEIVE_SAVE_SHEET_JSON = 'RECEIVE_SAVE_SHEET_JSON';
+
+function submitSaveSheetJSON(sheet) {
+    return {type: SUBMIT_SAVE_SHEET_JSON, sheet};
+}
+function receiveSaveSheetsJSON(response) {
+    return {type: RECEIVE_SAVE_SHEET_JSON, response};
+}
+
+export function saveSheetJSON(username, sheet, _JSON) {
+    return function (dispatch) {
+        dispatch(submitSaveSheetJSON(sheet));
+        const data = new FormData();
+        data.append( "json", JSON.stringify( _JSON ) );
+        return fetch(`http://default-environment.c2nuqptw9f.us-east-2.elasticbeanstalk.com/updateData?username=${username}&title=${sheet}`, {
+                mode: 'cors',
+                method: 'POST',
+                body: data,
+        })
+        // !!! Do not use catch !!! Catch would cause error, if error only log it
+        .then((response) => response.json(),
+            (error) => console.log('An error occurred.', error))
+        .then((json) => {
+            console.log(json);
+            return dispatch(receiveSaveSheetsJSON());
+        });
+    }
+}
+
+
+
+
+
+
+
+
+
 /////////////// HANDLEING SHEETS //////////////////
 export const SUBMIT_GET_SHEETS = 'SUBMIT_GET_SHEETS';
 export const RECEIVE_GET_SHEETS = 'RECEIVE_GET_SHEETS';

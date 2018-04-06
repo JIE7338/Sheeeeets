@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { suggestNewSheetName, changeSheetName, setNewSheetName, deleteSheet } from '../states/actions'
+import { suggestNewSheetName, changeSheetName, setNewSheetName, deleteSheet, openSheet } from '../states/actions'
 import Moment from 'react-moment';
-
+import { withRouter } from 'react-router-dom'
 
 const mapStateToProps = (state, ownProps) => {
     return {
@@ -26,15 +26,25 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         deleteSheet: (username, sheetName) => {
             dispatch(deleteSheet(username, sheetName));
         },
+        openThisSheet: (sheet) => {
+            dispatch(openSheet(sheet));
+        },
     }
 }
 
-const _SheetCard = class extends Component {
-    constructor(props) {
+
+
+
+
+
+
+const _SheetCard = withRouter(class extends Component {
+    constructor(...props) {
         super(...props);
         this.handelEdit = this.handelEdit.bind(this);
         this.handelSave = this.handelSave.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
+        this.handleClickSheet = this.handleClickSheet.bind(this);
         this.handleChangeNewSheetName = this.handleChangeNewSheetName.bind(this);
 
     }
@@ -50,7 +60,17 @@ const _SheetCard = class extends Component {
     handleChangeNewSheetName(event) {
         this.props.setNewSheetName(event.target.value);
     }
+    handleClickSheet(event) {
+        this.props.openThisSheet(this.props.sheet);
+        this.pushNewHistroy();
+    }
 
+
+    pushNewHistroy = () => {
+        this.props.history.push(
+           `sheet/${this.props.sheet}`);
+
+    }
 
     render() {
         const labelOrEditInput = (this.props.sheet !== this.props.sheetBeingEdited) ?
@@ -78,9 +98,11 @@ const _SheetCard = class extends Component {
         return (
             <div className="card">
                 <div className="card-image">
+                    <a onClick={this.handleClickSheet}>
                     <figure className="image is-4by3">
                         <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder"/>
                     </figure>
+                    </a>
                 </div>
                 <div className="card-content">
                     <div className="media">
@@ -102,7 +124,7 @@ const _SheetCard = class extends Component {
             </div>
         );
     }
-}
+});
 
 const SheetCard = connect(mapStateToProps, mapDispatchToProps)(_SheetCard)
 
