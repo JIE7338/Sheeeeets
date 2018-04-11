@@ -1,7 +1,5 @@
 
 import React, { Component } from 'react';
-import {  } from '../states/actions'
-
 
 
 const NotificationMessage = class extends Component {

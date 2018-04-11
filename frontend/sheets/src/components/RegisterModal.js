@@ -27,7 +27,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         submitRegistrationInfo: (key, value) => {
             dispatch(submitRegistrationInfo(key, value));
         },
-
     }
 }
 
@@ -40,7 +39,7 @@ const _RegisterModal = class extends Component {
     }
 
     handleInputChange(event) {
-        this.props.submitRegistrationInfo([event.target.name], event.target.value);
+        this.props.submitRegistrationInfo(event.target.name, event.target.value);
     }
     submitUser() {
         this.props.attemptRegister({

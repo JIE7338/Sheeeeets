@@ -11,9 +11,6 @@ const ToolbarButton = withRouter(class extends Component {
     }
 
     pushNewHistroy = () => {
-        console.log(this.props)
-        console.log(this.state.path);
-        console.log(this.props.history.location.pathname);
         if (this.props.history.location.pathname
             !== this.state.path)
         {
