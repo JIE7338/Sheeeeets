@@ -29,11 +29,12 @@ const _AccountManage = class extends Component {
 	}
 
 	render() {
-	    return <div className="section hero">
-	    			<div className="container title is-1"> Account Info</div>
+	    return <div className="section hero-bg">
+	    			<div className="container title is-1 has-text-centered"> Account Info</div>
 	    			<div className="container">
 	    				<AccountControl method={this.props.method}/>
 	    			</div>
+
 	    			<PasswordModal isActive={this.props.passwordIsToggled}/>
 	    			<EmailModal isActive={this.props.emailIsToggled}/>
 	    		</div>;

@@ -35,7 +35,7 @@ const _Toolbar = withRouter(class extends Component {
             {path:"upload",name:"Upload Profile Picture"}
         ];
         return <div>
-                <div className="hero is-primary ">
+                <div className="hero is-primary">
                     <div className="container">
                         <div className="columns">
                             <div className="column">
@@ -43,7 +43,7 @@ const _Toolbar = withRouter(class extends Component {
                             </div>
                             <div className="column">
                                 <div className="subtitle is-pulled-right">
-                                    You are signed in as {this.props.currentUser}
+                                    Welcome back, {this.props.currentUser}!
                                 </div>
                             </div>
                         </div>

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 import 'bulma/css/bulma.css';
+import 'bulma/mystyles.scss';
+
 import { connect } from 'react-redux'
 
 import Toolbar from './components/Toolbar.js';

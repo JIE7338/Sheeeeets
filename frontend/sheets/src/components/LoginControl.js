@@ -55,6 +55,12 @@ const _LoginControl = class extends Component {
         return (
             <div>
                 <h1 className='title has-text-centered'>Please sign in.</h1>
+                
+                <div className="columns">
+                            <div className="column"> </div>
+                            <div className="column is-two-thirds">
+                                
+                            
                 <form>
                     <div className="field">
                         <label className="label">Username</label>
@@ -88,6 +94,9 @@ const _LoginControl = class extends Component {
                     </p>
                 </div>
                 {failedText}
+                </div>
+                <div className="column"> </div>
+                </div>
             </div>
         );
     }
