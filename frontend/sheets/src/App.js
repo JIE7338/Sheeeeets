@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 import 'bulma/css/bulma.css';
+import 'bulma/bulma.sass';
 import 'bulma/mystyles.scss';
+
 
 import { connect } from 'react-redux'
 
@@ -88,7 +90,7 @@ class _App extends Component {
             );
         } else {
             elements =
-                <div className="hero is-primary is-fullheight">
+                <div className="hero-img is-primary is-fullheight">
                     <Switch>
                         <Route exact path="/login" render={(props) => (
                             <LoginPage {...props}/>)} />

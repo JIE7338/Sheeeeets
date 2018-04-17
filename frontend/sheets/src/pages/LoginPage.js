@@ -30,7 +30,7 @@ const _LoginPage = class extends Component {
     }
 
 	render() {
-	    return <div className="section hero-bg">
+	    return <div className="section">
 	    			
 	    			<div className="container">
 	    				<div className="container title is-1 has-text-centered"> Sheets</div>
