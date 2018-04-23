@@ -30,10 +30,10 @@ const _LoginPage = class extends Component {
     }
 
 	render() {
-	    return <div className="section">
+	    return <div className="section is-medium">
 	    			
-	    			<div className="container">
-	    				<div className="container title is-1 has-text-centered"> Sheets</div>
+	    			<div className="box">
+	    				<div className="title is-1 has-text-centered"> Sheets</div>
 	    				<LoginControl method={this.props.method}/>
 	    			</div>
 	    			<RegisterModal isActive={this.props.registerIsToggled}/>
