@@ -22,7 +22,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         submitLoginInfo: (key, value) => {
             dispatch(submitLoginInfo(key, value));
-        }
+        },
     }
 }
 
@@ -43,7 +43,7 @@ const _LoginControl = class extends Component {
     }
 
     handleInputChange(event) {
-        this.props.submitLoginInfo([event.target.name], event.target.value);
+        this.props.submitLoginInfo(event.target.name, event.target.value);
     }
 
     render() {

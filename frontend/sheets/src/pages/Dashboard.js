@@ -19,10 +19,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 const _Dashboard = class extends Component {
 
 
-    constructor(...args) {
-        super(...args);
-    }
-
     render() {
         return <div className="section">
                     <div className="section">

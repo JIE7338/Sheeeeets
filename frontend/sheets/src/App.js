@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 import 'bulma/css/bulma.css';
+<<<<<<< HEAD
 import 'bulma/bulma.sass';
 import 'bulma/mystyles.scss';
 
 
+=======
+import 'react-datasheet/lib/react-datasheet.css';
+>>>>>>> master
 import { connect } from 'react-redux'
 
 import Toolbar from './components/Toolbar.js';
@@ -12,6 +16,7 @@ import LoginPage from './pages/LoginPage.js';
 import Dashboard from './pages/Dashboard.js';
 import NotFound from './pages/NotFound.js';
 import AccountManage from './pages/AccountManage.js';
+import SheetPage from './pages/SheetPage.js';
 import NotificationMessage from './widgets/NotificationMessage.js';
 
 import {  } from './states/actions'
@@ -84,6 +89,7 @@ class _App extends Component {
                             <Dashboard/>)} />
                         <Route path="/login" component={RedirectHome}/>
                         <Route path="/manage" component={AccountManage}/>
+                        <Route path="/sheet/:sheetname" component={SheetPage}/>
                         <Route path="*" component={NotFound}/>
                     </Switch>
                 </div>

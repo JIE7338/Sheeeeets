@@ -7,7 +7,8 @@ import SheetCard from './SheetCard'
 const mapStateToProps = (state, ownProps) => {
     return {
         sheets: state.sheets.sheets,
-        username: state.session.username
+        dates: state.sheets.dates,
+        username: state.session.username,
     }
 }
 
@@ -30,10 +31,10 @@ const _SheetList = class extends Component {
 
     render() {
         return (
-            <div class="columns is-multiline is-mobile">
+            <div className="columns is-multiline">
                 {this.props.sheets.map((sheet,i) => {
-                    return <div className='column is-one-third '>
-                        <SheetCard key={i} sheet={sheet}/>
+                    return <div key={i} className='column is-one-third '>
+                        <SheetCard sheet={sheet} date={this.props.dates[i]}/>
                     </div>
                 })}
             </div>
