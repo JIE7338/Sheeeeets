@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux'
+import { defaultJSON } from '../data/defaults'
 
 import {
             SESSION_REQUEST_LOGIN,
@@ -34,19 +35,32 @@ import {
             RECEIVE_CHANGE_SHEET_NAME,
 
             OPEN_THIS_SHEET,
+
+            RECEIVE_GET_SHEET_JSON,
+            REMOVE_CURRENT_SHEET_INFO,
                                     } from './actions'
 
 //
 
 
 // ==========================================
-const defaultSingleSheetState = {};
+const defaultSingleSheetState = {
+    JSON: defaultJSON(),
+};
 
 function sheetPage(state= defaultSingleSheetState, action) {
     switch(action.type) {
         case OPEN_THIS_SHEET:
             return Object.assign({}, state, {
                 sheetName: action.sheet,
+            });
+        case RECEIVE_GET_SHEET_JSON:
+            return Object.assign({}, state, {
+                JSON: action.json,
+            });
+        case REMOVE_CURRENT_SHEET_INFO:
+            return Object.assign({}, state, {
+                JSON: defaultJSON(),
             });
         default:
             return state

@@ -1,3 +1,4 @@
+import { defaultJSON } from '../data/defaults'
 
 /////////// CREATING NEW SHEETS ////////////////////
 export const SUBMIT_CREATE_NEW_SHEET = 'SUBMIT_CREATE_NEW_SHEET';
@@ -58,10 +59,19 @@ export function getSheetJSON(username, sheet) {
                 method: 'GET',
         })
         // !!! Do not use catch !!! Catch would cause error, if error only log it
-        .then((response) => response.json(),
-            (error) => console.log('An error occurred.', error))
+        .then(async (response) => {
+            try {
+                const _response =  await response.json();
+                return _response;
+            } catch(e){
+                console.error('Empty JSON returned');
+                return defaultJSON();
+            }
+
+        }, (error) => {
+            console.log('An error occurred.', error)
+        })
         .then((json) => {
-            console.log(json);
             return dispatch(receiveGetSheetsJSON(json));
         });
     }
@@ -70,6 +80,7 @@ export function getSheetJSON(username, sheet) {
 
 export const SUBMIT_SAVE_SHEET_JSON = 'SUBMIT_SAVE_SHEET_JSON';
 export const RECEIVE_SAVE_SHEET_JSON = 'RECEIVE_SAVE_SHEET_JSON';
+export const REMOVE_CURRENT_SHEET_INFO = 'REMOVE_CURRENT_SHEET_INFO';
 
 function submitSaveSheetJSON(sheet) {
     return {type: SUBMIT_SAVE_SHEET_JSON, sheet};
@@ -81,28 +92,24 @@ function receiveSaveSheetsJSON(response) {
 export function saveSheetJSON(username, sheet, _JSON) {
     return function (dispatch) {
         dispatch(submitSaveSheetJSON(sheet));
-        const data = new FormData();
-        data.append( "json", JSON.stringify( _JSON ) );
         return fetch(`http://default-environment.c2nuqptw9f.us-east-2.elasticbeanstalk.com/updateData?username=${username}&title=${sheet}`, {
                 mode: 'cors',
                 method: 'POST',
-                body: data,
+                body: JSON.stringify( _JSON ),
         })
         // !!! Do not use catch !!! Catch would cause error, if error only log it
         .then((response) => response.json(),
             (error) => console.log('An error occurred.', error))
         .then((json) => {
             console.log(json);
-            return dispatch(receiveSaveSheetsJSON());
+            return dispatch(receiveSaveSheetsJSON(json));
         });
     }
 }
 
-
-
-
-
-
+export function removeCurrentSheetInfo() {
+    return { type: REMOVE_CURRENT_SHEET_INFO }
+}
 
 
 

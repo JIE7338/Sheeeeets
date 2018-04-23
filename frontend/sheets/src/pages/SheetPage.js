@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import NewSheetInput from '../components/NewSheetInput'
 import SheetList from '../components/SheetList'
-import { getSheetJSON, saveSheetJSON } from '../states/actions'
+import { getSheetJSON, saveSheetJSON, removeCurrentSheetInfo } from '../states/actions'
 import ReactDataSheet from 'react-datasheet';
 
 const mapStateToProps = (state, ownProps) => {
@@ -21,39 +21,19 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         saveSheetJSON: (username, sheet, json) => {
             dispatch(saveSheetJSON(username, sheet, json));
         },
+        removeCurrentSheetInfo: () => {
+            dispatch(removeCurrentSheetInfo());
+        }
     }
 }
-
-
-const sampleJSON = {
-    meta: 12,
-    columns: {
-        0: {
-            dataType: 'number',
-            rows: {
-                0: 1,
-                1: 54,
-            },
-        },
-        2: {
-            dataType: 'date',
-            rows: {
-                0: '1/21/23',
-                4: '11/13/92',
-            },
-        },
-    },
-
-}
-
-
 
 const _SheetPage = class extends Component {
     constructor (props) {
         super(props)
-        this.sheetObject = this.createSheet(sampleJSON);
+        this.sheetObject = this.createSheet(this.props.sheetJSON);
         this.sheetObject.addData();
-        this.props.getSheetJSON(this.props.username, this.props.sheetName);
+
+        this.props.getSheetJSON(this.props.username, this.props.sheetName)
     }
     createSheet(json) {
         const iface = {
@@ -64,15 +44,22 @@ const _SheetPage = class extends Component {
         };
         let maxRow = 2;
         let maxColumn = 2;
-        for (const column of Object.keys(iface._json.columns)) {
-            for (const row of Object.keys(iface._json.columns[column].rows)) {
-                if (row > maxRow) {
-                    maxRow = row;
+        iface.getDimensions = () => {
+            for (const column of Object.keys(iface._json.columns)) {
+                for (const row of Object.keys(iface._json.columns[column].rows)) {
+                    if (row > maxRow) {
+                        maxRow = row;
+                    }
+                }
+                if (column > maxColumn) {
+                    maxColumn = column;
                 }
             }
-            if (column > maxColumn) {
-                maxColumn = column;
-            }
+        }
+        iface.getDimensions();
+        iface.setJSON = (json) => {
+            iface._json = json;
+            iface.addData();
         }
         iface.emptyTable = () => {
             const table = [];
@@ -111,6 +98,8 @@ const _SheetPage = class extends Component {
         }
         iface.table = iface.emptyTable();
         iface.addData = () => {
+            iface.getDimensions();
+            iface.emptyTable();
             for (const column of Object.keys(iface._json.columns)) {
                 for (const row of Object.keys(iface._json.columns[column].rows)) {
                     iface.table[row][column].value = iface._json.columns[column].rows[row];
@@ -126,9 +115,11 @@ const _SheetPage = class extends Component {
             maxColumn++;
             iface.update();
         }
+        iface.updateTable = () => {
+            iface.addData();
+        }
         iface.update = () => {
-            iface.emptyTable();
-            iface.addData(iface._json);
+            iface.updateTable()
             this.forceUpdate();
             console.log(iface._json);
         }
@@ -146,16 +137,19 @@ const _SheetPage = class extends Component {
         return iface;
     }
 
+    componentWillUnmount() {
+        this.props.removeCurrentSheetInfo();
+    }
 
 
 
     columns = ['1', '2'];
     render() {
-
+        this.sheetObject.setJSON(this.props.sheetJSON);
+        this.sheetObject.updateTable();
         const sheet = this.sheetObject.get()
         return <div className="section">
                     <div className='title'>{this.props.sheetName}</div>
-
                     <ReactDataSheet
                         data={sheet}
                         valueRenderer={(cell) => cell.value}
